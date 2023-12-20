@@ -89,9 +89,11 @@ if(isset($_POST['luser'])){
           }
         }else {
             // Passwords do not match
-            echo "<script> console.log('Password: " . $password . "')</script>";
-            echo "<script> console.log('Hashed Password: " . $row['pass']  . "')</script>";
-            echo "hash not match";
+            echo "<script>alert('you enter wrong pass credential.')</script>";
+            echo "<script>window.open('login.php','_self')</script>";
+            // echo "<script> console.log('Password: " . $password . "')</script>";
+            // echo "<script> console.log('Hashed Password: " . $row['pass']  . "')</script>";
+            // echo "hash not match";
         }
 }
 
