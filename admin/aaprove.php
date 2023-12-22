@@ -51,7 +51,10 @@
                   include_once '../includes/conn.php';
                      $aid=$_SESSION['id'];
           $query="select * from user where id='$aid'";
-          $result=mysqli_query($conn,$query);
+          $stmt = mysqli_prepare($conn, $sql);
+          mysqli_stmt_bind_param($stmt, "i", $aid);
+          mysqli_stmt_execute($stmt);
+          $result = mysqli_stmt_get_result($stmt);
          while ($row=mysqli_fetch_array($result)){ 
              ?>
                 <div class="col-12">
@@ -139,7 +142,9 @@
                     <tbody>
                         <?php
           $query="select * from need where status='1'";
-          $result=mysqli_query($conn,$query);
+          $stmt->execute();// Execute the statement  
+          $result = $stmt->get_result();  // Fetch the results  
+          $stmt->close();
          while ($row=mysqli_fetch_array($result)){ ?>
                         <tr>
                             <form action="../dbopertion.php" method="post" enctype="multipart/form-data">
@@ -149,7 +154,10 @@
                                 <?php
                                 $rid=$row['rid'];
           $query1="select * from user where id=$rid";
-          $result1=mysqli_query($conn,$query1);
+          $stmt = mysqli_prepare($conn, $query1);
+          mysqli_stmt_bind_param($stmt, "i", $rid);
+          mysqli_stmt_execute($stmt);
+          $result1 = mysqli_stmt_get_result($stmt);
          while ($row1=mysqli_fetch_array($result1)){ ?>
           <input type='hidden' value=<?= $row1['id']; ?> name='rid'>
                                 <td><?= $row1['email']; ?></td>

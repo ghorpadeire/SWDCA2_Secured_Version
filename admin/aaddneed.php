@@ -55,7 +55,10 @@
                   include_once '../includes/conn.php';
                      $aid=$_SESSION['id'];
           $query="select * from user where id='$aid'";
-          $result=mysqli_query($conn,$query);
+          $stmt = mysqli_prepare($conn, $sql);
+          mysqli_stmt_bind_param($stmt, "i", $aid);
+          mysqli_stmt_execute($stmt);
+          $result = mysqli_stmt_get_result($stmt);
          while ($row=mysqli_fetch_array($result)){ 
              ?>
                 <div class="col-12">

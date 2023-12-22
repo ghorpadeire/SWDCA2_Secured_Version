@@ -1,3 +1,77 @@
+<?php
+require './vendor/autoload.php';
+use Respect\Validation\Validator;
+
+// Start a session
+session_start();
+
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require './vendor/autoload.php';
+
+$mail = new PHPMailer(true);
+try {
+    // Server settings
+    $mail->isSMTP();                                            // Send using SMTP
+    $mail->Host       = 'smtp.gmail.com';                       // Set the SMTP server to send through
+    $mail->SMTPAuth   = true;                                   // Enable SMTP authentication
+    $mail->Username   = 'pragcodeverify@gmail.com';             // SMTP username
+    $mail->Password   = 'Pranav@3108';                          // SMTP password
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            // Enable implicit TLS encryption
+    $mail->Port       = 465;                                    // TCP port to connect to
+
+    // Recipients
+    $mail->setFrom('pragcodeverify@gmail.com', 'Mailer');
+} catch (Exception $e) {
+    echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
+}
+
+// Generate and store CSRF token
+if (!isset($_SESSION['csrf_token'])) {
+    $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    
+// Check if the form is submitted
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get the email from the form submission
+    $email = $_POST['email'];
+
+    // Validate the email
+    $emailValidator = new Validator::email();
+    if (!$emailValidator->validate($email)) {
+        echo "Invalid email address.";
+        // Handle the error appropriately
+        return; // Stop further execution if the email is invalid
+    }
+
+    // Rest of the registration logic...
+}
+
+    $email = $_POST['email'];
+
+    // Generate OTP and send email
+    $otp = rand(100000, 999999); // Generate a 6-digit OTP
+    $_SESSION['otp'] = $otp;     // Store OTP in session for verification
+
+    // Prepare and send the email
+    $mail->addAddress($email, 'User');     // Add a recipient
+    $mail->isHTML(true);                   // Set email format to HTML
+    $mail->Subject = 'Email Verification OTP';
+    $mail->Body    = 'Your OTP for email verification is ' . $otp;
+
+    try {
+        $mail->send();
+    } catch (Exception $e) {
+        echo "Mailer Error: " . $mail->ErrorInfo;
+    }
+}
+?>
+
+   
 <!doctype html>
 <html lang="en">
 
@@ -36,7 +110,11 @@
 
 
                 <!-- Security Token: CSRF Protection -->
-                <!-- <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>"> -->
+                <input type="hidden" name="csrf_token" value="<?php
+require './vendor/autoload.php';
+use Respect\Validation\Validator;
+ echo $_SESSION['csrf_token']; ?>">
+
                     <div class="row">
                         <div class="col-12 mb-2 mt-2">
                             <select class="form-select" aria-label="Default select example" name="role" style="width:70%;">
@@ -89,19 +167,19 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-6">
-                            <div class="form-floating mb-2">
-                                <input type="text" class="form-control" id="floatingInput" name="epass">
-                                <label for="floatingInput">Enter Password</label>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="form-floating mb-2">
-                                <input type="text" class="form-control" id="floatingInput" name="cpass">
-                                <label for="floatingInput">Confirm Password</label>
-                            </div>
-                        </div>
-                    </div>
+    <div class="col-6">
+        <div class="form-floating mb-2">
+            <input type="text" class="form-control" id="floatingInput" name="epass">
+            <label for="floatingInput">Enter Password</label>
+        </div>
+    </div>
+    <div class="col-6">
+        <div class="form-floating mb-2">
+            <input type="text" class="form-control" id="floatingInput" name="cpass">
+            <label for="floatingInput">Confirm Password</label>
+        </div>
+    </div>
+</div>
 
                     <div class="row">
                         <div class="col-12">

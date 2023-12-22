@@ -54,8 +54,12 @@
             <?php
                   include_once '../includes/conn.php';
                      $aid=$_SESSION['id'];
-          $query="select * from user where id='$aid'";
-          $result=mysqli_query($conn,$query);
+                     $query="select * from user where id='$aid'";
+                     $stmt = mysqli_prepare($conn, $sql);
+                     mysqli_stmt_bind_param($stmt, "i", $aid);
+                     mysqli_stmt_execute($stmt);
+                     $result = mysqli_stmt_get_result($stmt);
+// TODO: Converted this query to a prepared statement for security
          while ($row=mysqli_fetch_array($result)){ 
              ?>
                 <div class="col-12">
@@ -116,7 +120,11 @@
                 <form action="../dbopertion.php" method="post" enctype="multipart/form-data">
                 <?php
           $query="select * from user where id='$aid'";
-          $result=mysqli_query($conn,$query);
+          $stmt = mysqli_prepare($conn, $sql);
+          mysqli_stmt_bind_param($stmt, "i", $aid);
+          mysqli_stmt_execute($stmt);
+          $result = mysqli_stmt_get_result($stmt);
+// TODO: Convert this query to a prepared statement for security
          while ($row=mysqli_fetch_array($result)){ 
              ?>
                 <input type='hidden' value="<?= $row['id']; ?>" name='id'>

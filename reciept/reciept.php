@@ -52,13 +52,29 @@
     <div class="row">
         <div class="col-3 vh-100  overflow-auto text-white" style="background-color: rgb(9, 200, 155);">
             <div class="row justify-content-around">
-            <?php
-                  include_once '../includes/conn.php';
-                     $aid=$_SESSION['id'];
-          $query="select * from user where id='$aid'";
-          $result=mysqli_query($conn,$query);
-         while ($row=mysqli_fetch_array($result)){ 
-             ?>
+            
+            
+             <?php
+                session_start();
+                include_once '../includes/conn.php';
+                
+                $aid = $_SESSION['id'];
+                
+                // Prepare and execute the query
+                $query = "SELECT * FROM user WHERE id = ?";
+                $stmt = mysqli_prepare($conn, $query);
+                mysqli_stmt_bind_param($stmt, "i", $aid);
+                mysqli_stmt_execute($stmt);
+                
+                // Get the results
+                $result = mysqli_stmt_get_result($stmt);
+                
+                // Fetch the data from the result set
+                while ($row = mysqli_fetch_array($result)) {
+                ?>
+
+
+
                 <div class="col-12">
                     <center>
                         <img src=<?= $row['photo']; ?> width="100px" height="100px" alt=""
@@ -73,6 +89,7 @@
                         <p class="m-0 ">Reciept</p>
                     </center>
                 </div>
+
                 <?php } ?>
             </div>
             <div class="menu">
@@ -123,13 +140,20 @@
                                 d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5zm.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1h-4zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1h-2z" />
                         </svg>
                         <h3>
-                        <?php 
-                        $sql= "SELECT distinct(did) FROM help where rid=$aid";
-                        $result=mysqli_query($conn,$sql);
-                        $rowcount=mysqli_num_rows($result);
-                        
-                            echo $rowcount; 
-                        ?>    
+                        <?php
+                            $sql = "SELECT COUNT(DISTINCT did) AS count FROM help WHERE rid = ?";
+                            $stmt = mysqli_prepare($conn, $sql);
+                            mysqli_stmt_bind_param($stmt, "i", $aid);
+                            mysqli_stmt_execute($stmt);
+                            $result = mysqli_stmt_get_result($stmt);
+
+                            if ($result) {
+                                $row = mysqli_fetch_assoc($result);
+                                $rowcount = $row['count'];
+                                echo $rowcount;
+                            } 
+                        ?>
+
 
                         </h3>
                         <h5 class="text-muted">Donor Help You</h5>
@@ -143,13 +167,23 @@
                             <path
                                 d="M0 4a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V4zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V6a2 2 0 0 1-2-2H3z" />
                         </svg>
-                        <?php 
-                        $sql="SELECT sum(ramount) FROM need where rid=$aid";
-                        $result=mysqli_query($conn,$sql);
-         while ($row=mysqli_fetch_array($result)){
-             $rfund=$row['sum(ramount)'];
-            } ?>
-             <h3><?=$rfund ?></h3>
+                                                
+                        <?php
+                            $sql = "SELECT SUM(ramount)  FROM need WHERE rid = ?";
+                            $stmt = mysqli_prepare($conn, $sql);
+                            mysqli_stmt_bind_param($stmt, "i", $aid);
+                            mysqli_stmt_execute($stmt);
+                            $result = mysqli_stmt_get_result($stmt);
+
+                            if ($result) {
+                                $row = mysqli_fetch_assoc($result);
+                                $rfund = $row['ramount'];
+                                // Now $rfund contains the sum of ramount values
+                            }
+                        ?>
+
+
+                        <h3><?=$rfund ?></h3>
                         <h5 class="text-muted">Required Fund</h5>
                     </center>
                 </div>
@@ -161,16 +195,26 @@
                         <svg xmlns="http://www.w3.org/2000/svg" style="color: rgb(242, 255, 0);" width="50" height="50"
                             fill="currentColor" class="bi bi-cash-stack" viewBox="0 0 16 16">
                             <path d="M1 3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1H1zm7 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4z" />
-                            <path
-                                d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V5zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2H3z" />
+                            <path d="M0 5a1 1 0 0 1 1-1h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H1a1 1 0 0 1-1-1V5zm3 0a2 2 0 0 1-2 2v4a2 2 0 0 1 2 2h10a2 2 0 0 1 2-2V7a2 2 0 0 1-2-2H3z" />
                         </svg>
-                        <?php 
-                        $sql="SELECT sum(hamount) FROM help where rid=$aid";
-                        $result=mysqli_query($conn,$sql);
-         while ($row=mysqli_fetch_array($result)){
-             $hfund=$row['sum(hamount)'];
-            } ?>
-             <h3><?=$hfund ?></h3>
+                        
+                        <?php
+                            $sql = "SELECT SUM(hamount)  FROM help WHERE rid = ?";
+                            $stmt = mysqli_prepare($conn, $sql);
+                            mysqli_stmt_bind_param($stmt, "i", $aid);
+                            mysqli_stmt_execute($stmt);
+                            $result = mysqli_stmt_get_result($stmt);
+
+                            if ($result) {
+                                $row = mysqli_fetch_assoc($result);
+                                $hfund = $row['hamount'];
+                                // Now $hfund contains the sum of hamount values
+                            } else {
+                                // Handle the error here if needed
+                            }
+                            ?>
+
+                        <h3><?=$hfund ?></h3>
                         <h5 class="text-muted">Recived Fund</h5>
                     </center>
                 </div>
