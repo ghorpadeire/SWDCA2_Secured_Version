@@ -1,3 +1,4 @@
+<?php include '../includes/rbac_middleware.php'; ?>
 <!doctype html>
 <html lang="en">
 
@@ -31,7 +32,7 @@
     <title>Approve service provider</title>
 </head>
 <body>
-    <?php session_start(); ?>
+    
     <div class="row sticky-top">
         <div class="col-12">
             <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(50, 234, 191);">
@@ -51,10 +52,7 @@
                   include_once '../includes/conn.php';
                      $aid=$_SESSION['id'];
           $query="select * from user where id='$aid'";
-          $stmt = mysqli_prepare($conn, $sql);
-          mysqli_stmt_bind_param($stmt, "i", $aid);
-          mysqli_stmt_execute($stmt);
-          $result = mysqli_stmt_get_result($stmt);
+          $result=mysqli_query($conn,$query);
          while ($row=mysqli_fetch_array($result)){ 
              ?>
                 <div class="col-12">
@@ -142,9 +140,7 @@
                     <tbody>
                         <?php
           $query="select * from need where status='1'";
-          $stmt->execute();// Execute the statement  
-          $result = $stmt->get_result();  // Fetch the results  
-          $stmt->close();
+          $result=mysqli_query($conn,$query);
          while ($row=mysqli_fetch_array($result)){ ?>
                         <tr>
                             <form action="../dbopertion.php" method="post" enctype="multipart/form-data">
@@ -154,10 +150,7 @@
                                 <?php
                                 $rid=$row['rid'];
           $query1="select * from user where id=$rid";
-          $stmt = mysqli_prepare($conn, $query1);
-          mysqli_stmt_bind_param($stmt, "i", $rid);
-          mysqli_stmt_execute($stmt);
-          $result1 = mysqli_stmt_get_result($stmt);
+          $result1=mysqli_query($conn,$query1);
          while ($row1=mysqli_fetch_array($result1)){ ?>
           <input type='hidden' value=<?= $row1['id']; ?> name='rid'>
                                 <td><?= $row1['email']; ?></td>

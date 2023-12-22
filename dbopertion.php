@@ -137,34 +137,32 @@ if(isset($_POST['rubtn']))
       // Hash the password
       else
       {
+        // After generating the OTP and before inserting user data into the user table
+        $stmt = $conn->prepare("INSERT INTO verifyotp (otp, is_email_verified, email) VALUES (?, 0, ?)");
+        $stmt->bind_param("is", $otp, $email);
+        $stmt->execute();
+         // Check for errors
+         if ($stmt->error) {
+          // Handle error
+          echo "Error: " . $stmt->error;
+      }
+        $stmt->close();
+        // $stmt = $conn->prepare("UPDATE verifyotp SET is_email_verified = 1 WHERE email = ?");
+        // $stmt->bind_param("s", $email);
+        // $stmt->execute();
+        sendmail_verify("$email","$otp");
+        echo "<script>alert('verify email')</script>";
+        
+        echo "<script>window. close();</script>"; 
+        
         $hashed_pwd = password_hash($password, PASSWORD_DEFAULT);
-
         // Prepare the SQL statement
         $stmt = $conn->prepare("INSERT INTO user (role, fname, lname, photo, address, mobile, email, pass, otp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        
-        // Bind parameters to the statement
-        $stmt->bind_param("sssbsissi", $role, $fname, $lname, $upload, $address, $mobile, $email, $hashed_pwd, $otp);
-        
-        // Execute the statement
+        $stmt->bind_param("sssbsissi", $role, $fname, $lname, $upload, $address, $mobile, $email, $hashed_pwd, $otp); // Bind parameters to the statement
         $stmt->execute();
-        
-        // Check for errors
-        if ($stmt->error) {
-            // Handle error
-            echo "Error: " . $stmt->error;
-        }
-        $stmt->close();// Close the statement
-        
-          // TODO: Converted this query to a p statement for security
-         if($result)
-         {
-          sendmail_verify("$email","$otp");
-          
-           echo "<script>alert('Check your mail for varification')</script>";
-          
-           //  echo "<script>window.open('login.php','_self')</script>";
-         }
-        
+        $stmt->close();
+        echo "<script>window.open('index.php','_self')</script>";
+      
       }
   }
 }
@@ -194,13 +192,16 @@ if(isset($_POST['luser']))
           $_SESSION['password']=$row['pass'];
           $_SESSION['role']=$row['role'];
       }
+      // echo ;cho ;
       if (password_verify($password, $row['pass'])) {
-      if('Recipient'==$role && $_SESSION['email']==$username )
+        echo $username;
+        echo $_SESSION['email'];
+      if(strtolower(substr('Recipient', 0, 1)) ==strtolower(substr($role, 0, 1)) && $_SESSION['email']==$username )
         {
           $_SESSION['file']='reciept/reciept.php';
           echo "<script>window.open('reciept/reciept.php','_self')</script>";
         }
-      if('Donor'==$_SESSION['role'] && $_SESSION['email']==$username )
+      if('Donor'==$role && $_SESSION['email']==$username )
       {
           $_SESSION['file']='donor/donor.php';
           echo "<script>window.open('donor/donor.php','_self')</script>";
@@ -213,11 +214,11 @@ if(isset($_POST['luser']))
         else
         {
           echo "<script>alert('you enter wrong pass credential.')</script>";
-          echo "<script>window.open('login.php','_self')</script>";
+          // echo "<script>window.open('login.php','_self')</script>";
         }
       }else {
           // Passwords do not match
-          echo "<script>alert('you enter wrong pass credential.')</script>";
+          echo "<script>alert('you enter wrong pass 1credential.')</script>";
           echo "<script>window.open('login.php','_self')</script>";
       }
 }
@@ -249,6 +250,7 @@ if(isset($_POST['rpass']))
                 $stmt = $conn->prepare("UPDATE user SET pass = ? WHERE email = ?");
                 $stmt->bind_param("ss", $hashed_password, $email);
                 $stmt->execute();// Execute the statement
+                $result = $stmt->get_result();
                 $stmt->close();// Close the statement
                 // TODO: Converted this query to a p statement for security
                 if($result)
@@ -290,26 +292,15 @@ if(isset($_POST['upbtn']))
       move_uploaded_file($_FILES['photo']['tmp_name'], $upload);
     }
 		
-    // $query="UPDATE `user` SET `fname` = '$fname',`lname` = '$lname',`photo` = '$upload',`address` = '$address',`mobile` = '$mobile',`email` = '$email' WHERE `id` ='$id'";
-    // Assuming $conn is your MySQLi database connection
-
-    // Prepare the statement with placeholders
-    $stmt = $conn->prepare("UPDATE `user` SET `fname` = ?, `lname` = ?, `photo` = ?, `address` = ?, `mobile` = ?, `email` = ? WHERE `id` = ?"); // Bind parameters to the placeholders
-    // "ssssssi" indicates the types of the parameters: string (s), string (s), string (s), string (s), string (s), string (s), integer (i)
+    $query = "UPDATE `user` SET `fname` = ?, `lname` = ?, `photo` = ?, `address` = ?, `mobile` = ?, `email` = ? WHERE `id` = ?";
+    $stmt = $conn->prepare($query);
     $stmt->bind_param("ssssssi", $fname, $lname, $upload, $address, $mobile, $email, $id);
-    $stmt->execute();    // Execute the statement
-    // Check for successful update
-    // if ($stmt->affected_rows > 0) {
-    //     echo "User updated successfully.";
-    // } else {
-    //     echo "User update failed.";
-    // }
-    // Close the statement
-    $stmt->close();
-    // TODO: Convert this query to a p statement for security
-      if($result)
-      {
-        echo "<script>alert('update profile suceessfuly.')</script>";
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $stmt->close();// Close the prepare statement
+      if($result) {
+        // echo "";
+        echo "<script>alert('User updated successfully.')</script>";
         if($role=='Admin')
         {
           echo "<script>window.open('admin/aprofile.php','_self')</script>";
@@ -322,18 +313,26 @@ if(isset($_POST['upbtn']))
         {
           echo "<script>window.open('reciept/rprofile.php','_self')</script>";
         }
-      }
+    } else {
+        echo "<script>alert('User update failed.')</script>";
+    }
+    $stmt->close();// Close the statement
 }
 if(isset($_POST['antbtn']))
 {
-  $type=trim(htmlspecialchars($_POST['type']));
-  $query="insert into needtype(type)values('$type')";
-           if($result)
-           {
-       
-             echo "<script>alert('Need type Added Sucessfully.')</script>";
-               echo "<script>window.open('admin/aaddneed.php','_self')</script>";
-           }
+  $type = trim(htmlspecialchars($_POST['type']));
+  $query = "INSERT INTO needtype(type) VALUES (?)";
+  $stmt = $conn->prepare($query);
+  $stmt->bind_param("s", $type);
+  if($stmt->execute())
+  {
+    echo "<script>alert('Need type Added Sucessfully.')</script>";
+    echo "<script>window.open('admin/aaddneed.php','_self')</script>";
+  }
+  $result = $stmt->get_result();
+  $stmt->close();// Close the prepare statement
+          //  if($result)
+           
 }
 if(isset($_POST['anbtn']))
 {
@@ -352,16 +351,20 @@ if(isset($_POST['anbtn']))
     //  $query="insert into need(rid,ntype,nphoto,nname,ndetails,ramount,ldate,status)values('$rid','$ntype','$upload','$nname','$ndetail','$ramount','$ldate','1')";
      
     // Prepare the statement with placeholders
-      $stmt = $conn->prepare("INSERT INTO need (rid, ntype, nphoto, nname, ndetails, ramount, ldate, status) VALUES (?, ?, ?, ?, ?, ?, ?, '1')");
-      $stmt->bind_param("sssssis", $rid, $ntype, $upload, $nname, $ndetail, $ramount, $ldate); // Bind parameters to the placeholders
-      $stmt->execute();// Execute the statement
-      $stmt->close();// Close the statement
-     // TODO: Converted this query to a P statement for security
-           if($result)
-           {
-             echo "<script>alert('Need Added Sucessfully.')</script>";
-               echo "<script>window.open('reciept/addhelp.php','_self')</script>";
-           }
+    $stmt = $conn->prepare("INSERT INTO need (rid, ntype, nphoto, nname, ndetails, ramount, ldate, status) VALUES (?, ?, ?, ?, ?, ?, ?, '1')");
+    if ($stmt) {
+        $stmt->bind_param("sssssis", $rid, $ntype, $upload, $nname, $ndetail, $ramount, $ldate);
+        if ($stmt->execute()) {
+            echo "<script>alert('Need Added Sucessfully.')</script>";
+            echo "<script>window.open('reciept/addhelp.php','_self')</script>";
+        } else {
+            echo "<script>alert('Error adding need.')</script>";
+        }
+        $stmt->close();
+    } else {
+        echo "<script>alert('Error preparing statement.')</script>";
+    }
+    
 }
 if(isset($_POST['snrbtn']))
 {
@@ -378,8 +381,9 @@ if(isset($_POST['drnbtn']))
     $stmt = $conn->prepare("DELETE FROM need WHERE id = ?"); // Prepare the delete statement
     $stmt->bind_param("i", $nid); // Bind the $nid variable to the placeholder
     $stmt->execute(); // Execute the delete operation
-    $stmt->close(); // Close the statement to free up resources
-  // TODO: Convert this query to a p statement for security
+    $result = $stmt->get_result();
+    $stmt->close();// Close the prepare statement
+    // TODO: Convert this query to a p statement for security
         if($result)
         {
             echo "<script>alert('Delete need suceessfuly.')</script>";
@@ -392,14 +396,16 @@ if(isset($_POST['arnbtn']))
   // $query="UPDATE `need` SET `status` ='0' WHERE `id` ='$nid'";
   $stmt = $conn->prepare("UPDATE `need` SET `status` = '0' WHERE `id` = ?");
   $stmt->bind_param("i", $nid);// 'i' indicates the type of the parameter is integer
-  $stmt->execute(); // Execute the prepare statement
-  $stmt->close();// Close the prepare statement
-  // TODO: Convert this query to a p statement for security
-  if($result)
+  if($stmt->execute()) // Execute the prepare statement
   {
     echo "<script>alert('Approve Recipient suceessfuly.')</script>";
     echo "<script>window.open('admin/aaprove.php','_self')</script>";
   }
+  // $result = $stmt->get_result();
+  $stmt->close();// Close the prepare statement
+  // TODO: Convert this query to a p statement for security
+  // if($result)
+  
 }
 if(isset($_POST['smubtn']))
 {
@@ -414,6 +420,7 @@ if(isset($_POST['dmubtn']))
     $stmt = $conn->prepare("DELETE FROM user WHERE id = ?"); // Prepare the delete statement
     $stmt->bind_param("i", $uid); // Bind the $nid variable to the placeholder
     $stmt->execute(); // Execute the delete operation
+    $result = $stmt->get_result();
     $stmt->close(); // Close the statement to free up resources
     // TODO: Convert this query to a p statement for security
 
@@ -441,6 +448,7 @@ if(isset($_POST['ah']))
   $stmt = $conn->prepare("INSERT INTO help (nid, did, rid, hamount, status) VALUES (?, ?, ?, ?, '1')"); // Prepare the insert statement
   $stmt->bind_param("iiii", $nid, $did, $rid, $hamount); // Bind the $nid, $did, $rid, $hamount variables to the placeholders
   $stmt->execute(); // Execute the insert operation
+  $result = $stmt->get_result();
   $stmt->close(); // Close the statement to free up resources
 // TODO: Convert this query to a p statement for security
            if($result)
@@ -462,6 +470,7 @@ if(isset($_POST['ddn']))
   $stmt = $conn->prepare("UPDATE `help` SET `status` = '2' WHERE `id` = ?"); // Prepare the update statement
   $stmt->bind_param("i", $hid); // Bind the $hid variable to the placeholder
   $stmt->execute(); // Execute the update operation
+  $result = $stmt->get_result();
   $stmt->close(); // Close the statement to free up resources
 // TODO: Convert this query to a p statement for security
   if($result)
@@ -479,6 +488,7 @@ if(isset($_POST['srtd']))
   $stmt = $conn->prepare("UPDATE `help` SET `status` = '0', `message` = ? WHERE `id` = ?"); // Prepare the update statement
   $stmt->bind_param("si", $message, $hid); // Bind the $message and $hid variables to the placeholders
   $stmt->execute(); // Execute the update operation
+  $result = $stmt->get_result();
   $stmt->close(); // Close the statement to free up resources
 // TODO: Converted this query to a p statement for security
   if($result)

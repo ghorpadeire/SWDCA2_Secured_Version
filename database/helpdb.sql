@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 03, 2022 at 04:07 PM
--- Server version: 10.4.18-MariaDB
--- PHP Version: 8.0.3
+-- Generation Time: Dec 22, 2023 at 10:17 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -35,7 +35,7 @@ CREATE TABLE `help` (
   `message` varchar(50) DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL,
   `nid` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `help`
@@ -61,7 +61,7 @@ CREATE TABLE `need` (
   `ramount` varchar(50) DEFAULT NULL,
   `ldate` varchar(50) DEFAULT NULL,
   `status` varchar(50) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `need`
@@ -69,7 +69,8 @@ CREATE TABLE `need` (
 
 INSERT INTO `need` (`id`, `rid`, `ntype`, `nphoto`, `nname`, `ndetails`, `ramount`, `ldate`, `status`) VALUES
 (6, '12', 'Health', '../upload/reciept.jpg', 'kidney problem', 'please help me i need money for kidney opertion', '45000', '2022-07-03T19:22', '0'),
-(8, '14', 'Home', '../upload/homeless.jpg', 'home damage', 'i home damage plese help me', '85000', '2022-05-26T19:36', '1');
+(8, '14', 'Home', '../upload/homeless.jpg', 'home damage', 'i home damage plese help me', '85000', '2022-05-26T19:36', '1'),
+(9, '40', 'Health', '../upload/Snow Piercer.jpeg', 'need warm cloths', 'feeling cold', '100', '2023-12-31T03:41', '0');
 
 -- --------------------------------------------------------
 
@@ -80,7 +81,7 @@ INSERT INTO `need` (`id`, `rid`, `ntype`, `nphoto`, `nname`, `ndetails`, `ramoun
 CREATE TABLE `needtype` (
   `id` int(6) UNSIGNED NOT NULL,
   `type` varchar(30) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `needtype`
@@ -88,10 +89,16 @@ CREATE TABLE `needtype` (
 
 INSERT INTO `needtype` (`id`, `type`) VALUES
 (4, 'Health'),
-(5, 'Home');
+(5, 'Home'),
+(6, 'food'),
+(7, 'food'),
+(8, 'home'),
+(9, 'food'),
+(10, 'need chocolate');
 
 -- --------------------------------------------------------
 
+--
 -- Table structure for table `user`
 --
 
@@ -104,21 +111,40 @@ CREATE TABLE `user` (
   `address` varchar(50) DEFAULT NULL,
   `mobile` varchar(30) NOT NULL,
   `email` varchar(50) NOT NULL,
-  `pass` varchar(30) NOT NULL,
-  `otp` VARCHAR(6) DEFAULT NULL,
-  `is_email_verified` TINYINT NOT NULL DEFAULT 0
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `pass` varchar(300) NOT NULL,
+  `otp` varchar(6) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `user`
 --
 
-INSERT INTO `user` (`id`, `role`, `fname`, `lname`, `photo`, `address`, `mobile`, `email`, `pass`) VALUES
-(10, 'Admin', 'fadmin', 'ladmin', '../upload/images.jpg', 'pune', '9988776655', 'admin1@gmail.com', '1'),
-(11, 'Donor', 'fdonor', 'ldonor', '../upload/donor.jpg', 'nashik', '9966332255', 'donor1@gmail.com', '1'),
-(12, 'Recipient', 'frecipient', 'lrecipient', '../upload/reciept1.jpg', 'mumbai', '9955447766', 'recipient1@gmail.com', '1'),
-(14, 'Recipient', 'frecipient1', 'lrecipient1', '../upload/reciept2.jpg', 'nagpur', '9922114556', 'recipient2@gmail.com', '1'),
-(15, 'Donor', 'donor1', 'donor2', '../upload/donor1.jpg', 'satara', '955221144', 'donor2@gmail.com', '1');
+INSERT INTO `user` (`id`, `role`, `fname`, `lname`, `photo`, `address`, `mobile`, `email`, `pass`, `otp`) VALUES
+(10, 'Admin', 'fadmin', 'ladmin', '../upload/images.jpg', 'pune', '9988776655', 'admin1@gmail.com', '$2y$10$Gkd0gzyDfug.amP0HvPEPukEizy8IPGGoiJbBmSwsiJxRjX5Gp2sq', NULL),
+(11, 'Donor', 'fdonor', 'ldonor', '../upload/donor.jpg', 'nashik', '9966332255', 'donor1@gmail.com', '$2y$10$Gkd0gzyDfug.amP0HvPEPukEizy8IPGGoiJbBmSwsiJxRjX5Gp2sq', NULL),
+(12, 'Recipient', 'frecipient', 'lrecipient', '../upload/reciept1.jpg', 'mumbai', '9955447766', 'recipient1@gmail.com', '$2y$10$Gkd0gzyDfug.amP0HvPEPukEizy8IPGGoiJbBmSwsiJxRjX5Gp2sq', NULL),
+(14, 'Recipient', 'frecipient1', 'lrecipient1', '../upload/reciept2.jpg', 'nagpur', '9922114556', 'recipient2@gmail.com', '$2y$10$Gkd0gzyDfug.amP0HvPEPukEizy8IPGGoiJbBmSwsiJxRjX5Gp2sq', NULL),
+(15, 'Donor', 'donor1', 'donor2', '../upload/donor1.jpg', 'satara', '955221144', 'donor2@gmail.com', '$2y$10$Gkd0gzyDfug.amP0HvPEPukEizy8IPGGoiJbBmSwsiJxRjX5Gp2sq', NULL),
+(48, 'donor', 'pranav.ncirl@gmail.com', '', NULL, '4 SAINT PETERS ROAD PHIBSBOROUGH DUBLIN 7 D07ND73', '353899439744', 'pranav.ncirl@gmail.com', '$2y$10$pA5Y/3GHww4y.PyLGktEg.9B5tIgHO2WrB2WMouiVmSUq0Uk31gKu', '457174');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `verifyotp`
+--
+
+CREATE TABLE `verifyotp` (
+  `otp` varchar(6) DEFAULT NULL,
+  `is_email_verified` int(30) DEFAULT NULL,
+  `email` varchar(50) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `verifyotp`
+--
+
+INSERT INTO `verifyotp` (`otp`, `is_email_verified`, `email`) VALUES
+('884733', 1, 'pranav.ncirl@gmail.com');
 
 --
 -- Indexes for dumped tables
@@ -149,6 +175,13 @@ ALTER TABLE `user`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `verifyotp`
+--
+ALTER TABLE `verifyotp`
+  ADD PRIMARY KEY (`email`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
 -- AUTO_INCREMENT for dumped tables
 --
 
@@ -162,19 +195,19 @@ ALTER TABLE `help`
 -- AUTO_INCREMENT for table `need`
 --
 ALTER TABLE `need`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `needtype`
 --
 ALTER TABLE `needtype`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(6) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=49;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

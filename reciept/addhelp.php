@@ -1,3 +1,4 @@
+<?php include '../includes/rbac_middleware.php'; ?>
 <!doctype html>
 <html lang="en">
 
@@ -34,8 +35,9 @@
     </style>
 </head>
 
+
 <body>
-    <?php session_start(); ?>
+    
     <div class="row sticky-top">
         <div class="col-12">
             <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(50, 234, 191);">
@@ -54,12 +56,8 @@
             <?php
                   include_once '../includes/conn.php';
                      $aid=$_SESSION['id'];
-        //   $query="select * from user where id='$aid'";
-          $stmt = $conn->prepare("SELECT * FROM needtype"); 
-          $stmt->execute();
-          $result = $stmt->get_result();
-          $stmt->close();
-// TODO: Convert this query to a prepared statement for security
+          $query="select * from user where id='$aid'";
+          $result=mysqli_query($conn,$query);
          while ($row=mysqli_fetch_array($result)){ 
              ?>
                 <div class="col-12">
@@ -124,11 +122,8 @@
                       <label for="formFile" class="form-label">Select Need Categarry</label>
                           <select class="form-select" aria-label="Default select example" name="ntype">
                           <?php
-                          $stmt = $conn->prepare("select * from needtype");
-                          $stmt->execute();
-                          $result = $stmt->get_result();
-                          $stmt->close();
-// TODO: Convert this query to a prepared statement for security
+                          $query="select * from needtype";
+          $result=mysqli_query($conn,$query);
          while ($row=mysqli_fetch_array($result)){ 
              ?>
                               <option><?= $row['type']; ?></option>

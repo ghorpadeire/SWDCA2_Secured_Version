@@ -1,3 +1,4 @@
+<?php include '../includes/rbac_middleware.php'; ?>
 <!doctype html>
 <html lang="en">
 
@@ -38,7 +39,7 @@
 </head>
 
 <body>
-    <?php session_start(); ?>
+    
     <div class="row sticky-top">
         <div class="col-12">
             <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(50, 234, 191);">
@@ -58,10 +59,7 @@
                   include_once '../includes/conn.php';
                      $aid=$_SESSION['id'];
           $query="select * from user where id='$aid'";
-          $stmt = mysqli_prepare($conn, $sql);
-          mysqli_stmt_bind_param($stmt, "i", $aid);
-          mysqli_stmt_execute($stmt);
-          $result = mysqli_stmt_get_result($stmt);
+          $result=mysqli_query($conn,$query);
          while ($row=mysqli_fetch_array($result)){ 
              ?>
                 <div class="col-12">
@@ -136,10 +134,7 @@
                     <tbody>
                     <?php
                     $query="select * from help where status='1' and rid='$aid'";
-                    $stmt = mysqli_prepare($conn, $sql);
-                    mysqli_stmt_bind_param($stmt, "i", $aid);
-                    mysqli_stmt_execute($stmt);
-                    $result = mysqli_stmt_get_result($stmt);
+                    $result=mysqli_query($conn,$query);
                     while ($row=mysqli_fetch_array($result)){ ?>
                         <tr>
                             <form action="../dbopertion.php" method="post" enctype="multipart/form-data">
@@ -151,10 +146,7 @@
                                 <?php
                                 $did=$row['did'];
                     $query1="select * from user where id='$did'";
-                    $stmt = mysqli_prepare($conn, $query1);
-                    mysqli_stmt_bind_param($stmt, "i", $did);
-                    mysqli_stmt_execute($stmt);
-                    $result1 = mysqli_stmt_get_result($stmt);
+                    $result1=mysqli_query($conn,$query1);
                     while ($row1=mysqli_fetch_array($result1)){ ?>
                     <td><?= $row1['email']; ?></td>
                     <td><?= $row1['mobile']; ?></td>
@@ -206,10 +198,7 @@
                                 <?php
                                     $uid=$_SESSION['uid'];
           $query="select * from user where id='$uid'";
-          $stmt = mysqli_prepare($conn, $sql);
-          mysqli_stmt_bind_param($stmt, "i", $uid);
-          mysqli_stmt_execute($stmt);
-          $result = mysqli_stmt_get_result($stmt);
+          $result=mysqli_query($conn,$query);
          while ($row=mysqli_fetch_array($result)){ ?>
                                     <tr>
                                         <td>

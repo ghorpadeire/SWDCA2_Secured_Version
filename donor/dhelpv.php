@@ -1,3 +1,4 @@
+<?php include '../includes/rbac_middleware.php'; ?>
 <!doctype html>
 <html lang="en">
 
@@ -37,7 +38,7 @@
      <title>Approve Recipient need</title>
 </head>
 <body>
-<?php session_start(); ?>
+ 
     <div class="row sticky-top">
         <div class="col-12">
             <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(50, 234, 191);">

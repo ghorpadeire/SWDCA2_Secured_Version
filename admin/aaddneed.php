@@ -1,3 +1,4 @@
+<?php include '../includes/rbac_middleware.php'; ?>
 <!doctype html>
 <html lang="en">
 
@@ -35,7 +36,7 @@
 </head>
 
 <body>
-    <?php session_start(); ?>
+    
     <div class="row sticky-top">
         <div class="col-12">
             <nav class="navbar navbar-expand-lg navbar-dark" style="background-color: rgb(50, 234, 191);">
@@ -55,10 +56,7 @@
                   include_once '../includes/conn.php';
                      $aid=$_SESSION['id'];
           $query="select * from user where id='$aid'";
-          $stmt = mysqli_prepare($conn, $sql);
-          mysqli_stmt_bind_param($stmt, "i", $aid);
-          mysqli_stmt_execute($stmt);
-          $result = mysqli_stmt_get_result($stmt);
+          $result=mysqli_query($conn,$query);
          while ($row=mysqli_fetch_array($result)){ 
              ?>
                 <div class="col-12">
