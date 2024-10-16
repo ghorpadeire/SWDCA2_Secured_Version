@@ -1,0 +1,5 @@
+
+
+[submodule "vendor/respect/stringifier"]
+  path = vendor/respect/stringifier
+  url = https://github.com/Respect/Stringifier.git
