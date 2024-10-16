@@ -3,3 +3,15 @@
 [submodule "vendor/respect/stringifier"]
   path = vendor/respect/stringifier
   url = https://github.com/Respect/Stringifier.git
+
+  [submodule "vendor/phpmailer/phpmailer"]
+path = vendor/phpmailer/phpmailer
+url = https://github.com/PHPMailer/PHPMailer.git
+
+[submodule "vendor/respect/validation"]
+path = vendor/respect/validation
+url = https://github.com/Respect/Validation.git
+
+[submodule "vendor/symfony/polyfill-mbstring"]
+path = vendor/symfony/polyfill-mbstring
+url = https://github.com/symfony/polyfill-mbstring.git
