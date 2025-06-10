@@ -15,15 +15,15 @@ The objective was to understand and implement essential security features on a s
 
 ## 🚀 Features Implemented
 
-- 🔑 **User Authentication** – Secure login system with hashed passwords and session control  
-- 🔒 **Role-Based Authorization** – Admin/user access control for protected routes  
-- 🧼 **Input Validation & Sanitization** – Prevents XSS, SQL injection, and other injection attacks  
-- 🌐 **HTTPS Support** – Secure communication over SSL/TLS (in production)  
-- 📦 **Environment Configuration** – Uses `.env` for sensitive data management  
-- 🛡️ **Secure Headers** – Implemented headers like CSP, HSTS, X-Frame-Options  
-- 🧠 **Session Management** – HttpOnly and Secure cookie settings with session expiry  
-- 📋 **Audit Logging** – Logs login, logout, and critical user actions  
-- 🚫 **Rate Limiting** – Prevents brute-force and denial-of-service attempts
+- 🔑 User Authentication – Secure login system with hashed passwords and session control  
+- 🔒 Role-Based Authorization – Admin/user access control for protected routes  
+- 🧼 Input Validation & Sanitization – Prevents XSS, SQL injection, and other injection attacks  
+- 🌐 HTTPS Support – Secure communication over SSL/TLS (in production)  
+- 📦 Environment Configuration – Uses `.env` for sensitive data management  
+- 🛡️ Secure Headers – Implemented headers like CSP, HSTS, X-Frame-Options  
+- 🧠 Session Management – HttpOnly and Secure cookie settings with session expiry  
+- 📋 Audit Logging – Logs login, logout, and critical user actions  
+- 🚫 Rate Limiting – Prevents brute-force and denial-of-service attempts
 
 ---
 
@@ -41,7 +41,7 @@ The objective was to understand and implement essential security features on a s
 ## 📁 Folder Structure
 
 ```
-SWDCA2_Secured_Version/
+SecureWebApp-NodeJS/
 ├── public/             # Static files (HTML/CSS)
 ├── routes/             # Express route files
 ├── middleware/         # Authentication, logging, validation
@@ -78,6 +78,7 @@ touch .env
 ```
 
 Sample `.env` file:
+
 ```env
 PORT=3000
 MONGO_URI=mongodb://localhost:27017/swdca2_secure
@@ -104,15 +105,15 @@ docker run -p 3000:3000 swdca2-secure
 
 ## 🔎 Security Demonstrations
 
-| Feature                  | Description                                                  |
-|--------------------------|--------------------------------------------------------------|
-| Password Hashing         | bcrypt used to hash and store user passwords securely        |
-| Session Hardening        | Sessions secured via HttpOnly, Secure cookies, and expiry    |
-| Role-based Access        | Only admins can access protected admin routes                |
-| Input Validation         | express-validator to sanitize and validate all inputs        |
-| HTTPS Setup              | Configurable for secure HTTPS communication                  |
-| Rate Limiting            | express-rate-limit protects endpoints from abuse             |
-| Security Headers         | helmet sets common protection headers                        |
+| Feature              | Description                                                  |
+|----------------------|--------------------------------------------------------------|
+| Password Hashing     | bcrypt used to hash and store user passwords securely        |
+| Session Hardening    | Sessions secured via HttpOnly, Secure cookies, and expiry    |
+| Role-based Access    | Only admins can access protected admin routes                |
+| Input Validation     | express-validator to sanitize and validate all inputs        |
+| HTTPS Setup          | Configurable for secure HTTPS communication                  |
+| Rate Limiting        | express-rate-limit protects endpoints from abuse             |
+| Security Headers     | helmet sets common protection headers                        |
 
 ---
 
@@ -120,11 +121,11 @@ docker run -p 3000:3000 swdca2-secure
 
 This project helped reinforce the following cybersecurity principles:
 
-- Defense in depth
-- Least privilege
-- Secure coding practices
-- Session & token-based authentication
-- Secure deployment strategies
+- Defense in depth  
+- Least privilege  
+- Secure coding practices  
+- Session & token-based authentication  
+- Secure deployment strategies  
 
 ---
 
