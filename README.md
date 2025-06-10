@@ -1,4 +1,4 @@
-# 🔐 SWDCA2 - Secured Version
+# 🔐 SecureWebApp-NodeJS
 
 A security-enhanced version of a basic web application developed as part of the Secure Web Development module at the National College of Ireland (NCI).
 
