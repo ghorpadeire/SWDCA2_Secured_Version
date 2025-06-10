@@ -1,47 +1,143 @@
-# SWDCA2‑Secure‑WebApp
+# 🔐 SWDCA2 - Secured Version
 
-:contentReference[oaicite:11]{index=11}  
-:contentReference[oaicite:12]{index=12}
+A security-enhanced version of a basic web application developed as part of the Secure Web Development module at the National College of Ireland (NCI).
 
----
-
-## 🚀 Features
-
-- :contentReference[oaicite:13]{index=13}  
-- :contentReference[oaicite:14]{index=14}  
-- :contentReference[oaicite:15]{index=15}  
-- :contentReference[oaicite:16]{index=16}  
-- :contentReference[oaicite:17]{index=17}  
-- :contentReference[oaicite:18]{index=18}  
-- :contentReference[oaicite:19]{index=19}  
+This project demonstrates how to take a standard web application and apply real-world security features using industry best practices, aligning with OWASP Top 10 standards.
 
 ---
 
-## 📚 Security Controls Overview
+## 📚 Project Context
 
-:contentReference[oaicite:20]{index=20}
-
-1. :contentReference[oaicite:21]{index=21}  
-   - :contentReference[oaicite:22]{index=22} :contentReference[oaicite:23]{index=23}  
-2. :contentReference[oaicite:24]{index=24}  
-   - :contentReference[oaicite:25]{index=25} :contentReference[oaicite:26]{index=26}  
-3. :contentReference[oaicite:27]{index=27}  
-   - :contentReference[oaicite:28]{index=28} :contentReference[oaicite:29]{index=29}  
-4. **Session Hardening**  
-   - :contentReference[oaicite:30]{index=30} :contentReference[oaicite:31]{index=31}  
-5. **Rate Limiting**  
-   - :contentReference[oaicite:32]{index=32} :contentReference[oaicite:33]{index=33}  
-6. **Audit Logging**  
-   - Logs security-relevant events, suitable for monitoring and alerting  
-7. **Configuration Security**  
-   - Secrets loaded from environment; no sensitive data stored in code  
+This project was completed as part of **Secure Web Development (SWDCA2)** coursework at **National College of Ireland**.  
+The objective was to understand and implement essential security features on a simple web application.
 
 ---
 
-## 🛠️ Getting Started
+## 🚀 Features Implemented
+
+- 🔑 **User Authentication** – Secure login system with hashed passwords and session control  
+- 🔒 **Role-Based Authorization** – Admin/user access control for protected routes  
+- 🧼 **Input Validation & Sanitization** – Prevents XSS, SQL injection, and other injection attacks  
+- 🌐 **HTTPS Support** – Secure communication over SSL/TLS (in production)  
+- 📦 **Environment Configuration** – Uses `.env` for sensitive data management  
+- 🛡️ **Secure Headers** – Implemented headers like CSP, HSTS, X-Frame-Options  
+- 🧠 **Session Management** – HttpOnly and Secure cookie settings with session expiry  
+- 📋 **Audit Logging** – Logs login, logout, and critical user actions  
+- 🚫 **Rate Limiting** – Prevents brute-force and denial-of-service attempts
+
+---
+
+## 🛠️ Technologies Used
+
+- **Backend:** Node.js (Express)  
+- **Frontend:** HTML/CSS, Bootstrap  
+- **Database:** MongoDB  
+- **Security:** bcrypt, helmet, express-session, express-validator  
+- **Environment Handling:** dotenv  
+- **Containerization (Optional):** Docker, Docker Compose
+
+---
+
+## 📁 Folder Structure
+
+```
+SWDCA2_Secured_Version/
+├── public/             # Static files (HTML/CSS)
+├── routes/             # Express route files
+├── middleware/         # Authentication, logging, validation
+├── models/             # MongoDB models
+├── views/              # Templating files (if used)
+├── .env                # Environment secrets (not tracked)
+├── app.js              # Main app entry
+├── Dockerfile          # Docker setup
+└── README.md
+```
+
+---
+
+## 📦 Installation & Setup
 
 ### Prerequisites
 
-- Node.js ≥18 or equivalent backend  
-- Docker (optional)  
-- `.env` file with:
+- Node.js v18+
+- MongoDB installed or MongoDB Atlas URI
+- (Optional) Docker & Docker Compose
+
+### Step-by-Step
+
+```bash
+# 1. Clone the repository
+git clone https://github.com/ghorpadeire/SWDCA2_Secured_Version.git
+cd SWDCA2_Secured_Version
+
+# 2. Install dependencies
+npm install
+
+# 3. Create a .env file
+touch .env
+```
+
+Sample `.env` file:
+```env
+PORT=3000
+MONGO_URI=mongodb://localhost:27017/swdca2_secure
+SESSION_SECRET=your_secret_key
+```
+
+```bash
+# 4. Start the application
+npm start
+```
+
+Open in browser: `http://localhost:3000`
+
+---
+
+## 🐳 Docker Usage (Optional)
+
+```bash
+docker build -t swdca2-secure .
+docker run -p 3000:3000 swdca2-secure
+```
+
+---
+
+## 🔎 Security Demonstrations
+
+| Feature                  | Description                                                  |
+|--------------------------|--------------------------------------------------------------|
+| Password Hashing         | bcrypt used to hash and store user passwords securely        |
+| Session Hardening        | Sessions secured via HttpOnly, Secure cookies, and expiry    |
+| Role-based Access        | Only admins can access protected admin routes                |
+| Input Validation         | express-validator to sanitize and validate all inputs        |
+| HTTPS Setup              | Configurable for secure HTTPS communication                  |
+| Rate Limiting            | express-rate-limit protects endpoints from abuse             |
+| Security Headers         | helmet sets common protection headers                        |
+
+---
+
+## 🎓 Academic Contribution
+
+This project helped reinforce the following cybersecurity principles:
+
+- Defense in depth
+- Least privilege
+- Secure coding practices
+- Session & token-based authentication
+- Secure deployment strategies
+
+---
+
+## 👨‍💻 Author
+
+**Pranav Ghorpade**  
+MSc Cybersecurity | National College of Ireland  
+GitHub: [ghorpadeire](https://github.com/ghorpadeire)  
+Email: pranav.ghorpade3108@gmail.com
+
+---
+
+## 📄 License
+
+This project is licensed for academic and demonstration use.  
+MIT License (can be updated as needed).
